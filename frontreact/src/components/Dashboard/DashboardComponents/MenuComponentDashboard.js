@@ -6,11 +6,12 @@ import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import ListItemText from "@mui/material/ListItemText";
 import Drawer from "@mui/material/Drawer";
 import {styled, useTheme} from "@mui/material/styles";
+import PersonIcon from '@mui/icons-material/Person';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import {ListItemButton} from "@mui/material";
 
 const drawerWidth = 240;
 
@@ -49,14 +50,23 @@ const MenuComponentDashboard = (props) => {
             </DrawerHeader>
             <Divider/>
             <List>
-                {['Turnos','Pacientes'].map((text, index) => (
-                    <ListItem button key={text}>
+                <ListItem disablePadding>
+                    <ListItemButton>
                         <ListItemIcon>
-                            {index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}
+                            <CalendarMonthIcon/>
                         </ListItemIcon>
-                        <ListItemText primary={text}/>
-                    </ListItem>
-                ))}
+                        <ListItemText primary="Turnos" />
+                    </ListItemButton>
+                </ListItem>
+
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <PersonIcon/>
+                        </ListItemIcon>
+                        <ListItemText primary="Pacientes" />
+                    </ListItemButton>
+                </ListItem>
             </List>
             <Divider/>
         </Drawer>

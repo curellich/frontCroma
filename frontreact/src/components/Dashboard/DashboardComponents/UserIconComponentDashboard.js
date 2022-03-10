@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
 //Opciones del icono de usuario
-const settings = ['Account','Logout'];
+const settings = ['Cuenta','Cerrar sesión'];
 
 const UserIconComponentDashboard = (props) => {
 
