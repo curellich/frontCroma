@@ -23,7 +23,7 @@ const DashboardComponent = () => {
             <NavBarComponentDashboard
                 open={openMenu}
                 onClick={handleDrawerOpen}
-//ACA TENGO QUE PONER EN VEZ DE MENU UN ESTADO QUE ME INDIQUE QUE VENTANA SE ENTA RENDERIZANDO EN EL MainContentDashboard
+                //ACA TENGO QUE PONER EN VEZ DE MENU UN ESTADO QUE ME INDIQUE QUE VENTANA SE ENTA RENDERIZANDO EN EL MainContentDashboard
                 menuItem="Menu"
             />
             <MenuComponentDashboard open={openMenu} onClick={handleDrawerClose}/>

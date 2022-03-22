@@ -1,6 +1,11 @@
 import React from 'react';
 import Typography from "@mui/material/Typography";
 import {styled} from "@mui/material/styles";
+import {Routes, Route} from "react-router-dom"
+import Appointments from "../../../layouts/Appointments";
+import Patients from "../../../layouts/Patients";
+import Box from "@mui/material/Box";
+
 
 const drawerWidth = 240;
 
@@ -8,7 +13,7 @@ const drawerWidth = 240;
 const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})(
     ({theme, open}) => ({
         flexGrow: 1,
-        padding: theme.spacing(3),
+        paddingTop: theme.spacing(2),
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
@@ -35,19 +40,17 @@ const DrawerHeader = styled('div')(({theme}) => ({
 
 const MainContentDashboard = (props) => {
     return (
-        <div>
-            <Main open={props.open}>
-                <DrawerHeader/>
-                {/***************************************************************************************************/}
-                {/*ACA ES DONDE SE INSERTAN LOS COMPONENTES QUE SE VAN A IR RENDERIZANDO*/}
-                {/*LA VISTA DE AGENDA DE CITAS*/}
-                {/*LA VISTA DE ACCESO A PACIENTES*/}
-                <Typography paragraph>
-                    Aca yhay texto
-                </Typography>
+        <Main open={props.open}>
+            <DrawerHeader/>
+            {/***************************************************************************************************/}
+            <Routes>
+                <Route exact path="/Login" element={<Appointments/>}> Login</Route>
+                <Route exact path="/Register" element={<Appointments/>}> Register</Route>
+                <Route exact path="/Appointments" element={<Appointments/>}> Citas</Route>
+                <Route exact path="/Patients" element={<Patients/>}> Pacientes</Route>
+            </Routes>
+        </Main>
 
-            </Main>
-        </div>
     );
 };
 
