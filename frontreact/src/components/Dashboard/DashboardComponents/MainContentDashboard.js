@@ -1,10 +1,8 @@
 import React from 'react';
-import Typography from "@mui/material/Typography";
 import {styled} from "@mui/material/styles";
 import {Routes, Route} from "react-router-dom"
 import Appointments from "../../../layouts/Appointments";
 import Patients from "../../../layouts/Patients";
-import Box from "@mui/material/Box";
 
 
 const drawerWidth = 240;

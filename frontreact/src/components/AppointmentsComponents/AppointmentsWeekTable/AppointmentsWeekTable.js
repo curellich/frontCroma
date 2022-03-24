@@ -1,18 +1,16 @@
 import * as React from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import PatientesButtonCell from "./PatientesButtonCell";
 import {DateTime} from "luxon";
-import InitMatrizValues, {
+import {
     CompleteAppointmentsInArray,
-    FirstWeekDay, MatrizNxN,
+    FirstWeekDay, InitMatrizValues, MatrizNxN,
     WeekRangeStringLabels
 } from "../../helpers/AppointmentsHelpers/AppointmentsHelpers";
+import AppointmentsWeekTableHeader from "./AppointmentsWeekTableHeader";
+import AppointmentsWeekTableBody from "./AppointmentsWeekTableBody";
+
 
 //Obtengo el numero de semana actual, emplea el objeto DateTime de Luxon
 const weekNumber = DateTime.now().weekNumber;
@@ -24,24 +22,6 @@ console.log(`El primer dia de la semana es: ${firstWeekDay}`);
 
 //Declaro una lista para completar la cabecera de la table
 const weekDays = WeekRangeStringLabels(firstWeekDay, 6);
-
-//Declaro la lista que va a contener los datos de la cabacera
-const columns = [];
-
-//Completo los valores de la semana para las columnas
-{
-    weekDays.map((day) => {
-        columns.push(
-            {
-                field: `${day.date}`,
-                labelDay: `${day.date} ${day.dayOfWeek}`,
-                align: 'center',
-                border: '1px solid black',
-                minWidth: 130,
-            },
-        )
-    })
-}
 
 //aca tengo que meter el JSON de la base de datos
 const data = [
@@ -137,120 +117,18 @@ const appointmentsArray = MatrizNxN(24, 6);
 //Inicializo el array con los horarios por defecto
 InitMatrizValues(appointmentsArray, firstWeekDay, emptyDataStructure);
 
-
-// Completo el array con las citas recibidas por el servidor en formato JSON
+// Completo el array con las citas recibidas por el servidor en formato JSON que se encuentran en DATA
 CompleteAppointmentsInArray(firstWeekDay, appointmentsArray, data);
-// console.log(appointmentsArray);
+
 
 export default function StickyHeadTable() {
-
+    // const classes = style();
     return (
         <Paper sx={{width: '100%', overflow: 'hidden'}}>
             <TableContainer sx={{maxHeight: {xs: 480, md: 900}}}>
                 <Table stickyHeader={true} aria-label="sticky table">
-                    <TableHead>
-                        <TableRow>
-                            {columns.map(column => (
-                                <TableCell
-                                    key={column.field}
-                                    align={column.align}
-                                    style={{border: column.border}}
-                                    sx={{
-                                        minWidth: {
-                                            xs: column.minWidth
-                                        },
-                                        paddingLeft: {
-                                            xs: '0px'
-                                        },
-                                        paddingRight: {
-                                            xs: '0px'
-                                        },
-                                        paddingTop: {
-                                            xs: '0px'
-                                        },
-                                        paddingBottom: {
-                                            xs: '0px'
-                                        }
-
-                                    }}
-                                >
-                                    {`${column.labelDay}`}
-                                </TableCell>
-                            ))}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {
-                            appointmentsArray.map((hour, index) => {
-                                return (
-                                    <TableRow key={index}>
-                                        {hour.map((appointment, index) => {
-                                            if (appointment.id_patient !== '') {
-                                                return (
-                                                    <TableCell align='center' sx={{
-                                                        paddingLeft: {
-                                                            xs: '2px'
-                                                        },
-                                                        paddingRight: {
-                                                            xs: '2px'
-                                                        },
-                                                        paddingTop: {
-                                                            xs: '5px'
-                                                        },
-                                                        paddingBottom: {
-                                                            xs: '5px'
-                                                        }
-                                                    }} key={index}>
-                                                        <PatientesButtonCell
-                                                            key={appointment.id_appointment}
-                                                            id_appointment={appointment.id_appointment}
-                                                            id_patient={appointment.id_patient}
-                                                            id_professional={appointment.id_professional}
-                                                            appointmentdate={appointment.appointmentDate}
-                                                            nameofprofessional={appointment.professionalsName}
-                                                            details={appointment.details}
-                                                            patient={appointment.patientsName}
-                                                            hour={appointment.appointmentDate.toLocaleTimeString().split(' ')[0].slice(0, -3)}
-                                                            color='secondary'
-                                                        />
-                                                    </TableCell>
-                                                )
-                                            } else {
-                                                return (
-                                                    <TableCell align='center' sx={{
-                                                        paddingLeft: {
-                                                            xs: '2px'
-                                                        },
-                                                        paddingRight: {
-                                                            xs: '2px'
-                                                        },
-                                                        paddingTop: {
-                                                            xs: '5px'
-                                                        },
-                                                        paddingBottom: {
-                                                            xs: '5px'
-                                                        },
-
-                                                    }} key={index}>
-                                                        <PatientesButtonCell
-                                                            key={appointment.appointmentDate}
-                                                            id_appointment={''}
-                                                            id_patient={''}
-                                                            id_professional={''}
-                                                            appointmentdate={appointment.appointmentDate}
-                                                            nameofprofessional={''}
-                                                            details={''}
-                                                            patient={'__LIBRE__'}
-                                                            hour={appointment.appointmentDate.toLocaleTimeString().split(' ')[0].slice(0, -3)}
-                                                        />
-                                                    </TableCell>)
-                                            }
-                                        })}
-                                    </TableRow>
-                                )
-                            })
-                        }
-                    </TableBody>
+                    <AppointmentsWeekTableHeader weekDays={weekDays}/>
+                    <AppointmentsWeekTableBody appointmentsArray={appointmentsArray}/>
                 </Table>
             </TableContainer>
         </Paper>

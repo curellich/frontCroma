@@ -168,7 +168,7 @@ export const CompleteAppointmentsInArray = (firstDayOfWeek, array, data) => {
  * @param initDataStructureValues
  * @constructor
  */
-export default function InitMatrizValues(matriz, firstWeekDay, initDataStructureValues) {
+export const InitMatrizValues = (matriz, firstWeekDay, initDataStructureValues) => {
     let auxDataStructure = JSON.parse(JSON.stringify(initDataStructureValues));
     auxDataStructure.appointmentDate = new Date(firstWeekDay);
 
