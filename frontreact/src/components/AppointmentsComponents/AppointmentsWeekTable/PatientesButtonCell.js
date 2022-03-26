@@ -1,14 +1,13 @@
 import Typography from "@mui/material/Typography";
 import React from "react";
-import {Button, Grid} from "@mui/material";
-import MoodBadIcon from '@mui/icons-material/MoodBad';
 import Divider from "@mui/material/Divider";
+import {Button, Grid} from "@mui/material";
 
 
 const PatientesButtonCell = (props) => {
     return (
         <Button
-            key={props.id_appointment}
+            key={props.appointmentdate}
             id_appointment={props.id_appointment}
             id_patient={props.id_patient}
             id_professional={props.id_professional}
@@ -38,9 +37,7 @@ const PatientesButtonCell = (props) => {
                     {/*    <MoodBadIcon fontSize="small"/>*/}
                     {/*</Grid>*/}
                     {/*}*/}
-
                 </Grid>
-
                 <Grid item xs={12}>
                     <Typography variant="subtitle2">{props.patient}</Typography>
                 </Grid>

@@ -28,6 +28,38 @@ export const FirstWeekDay = (year, weekNumber, startHour) => {
         console.log(e);
     }
 };
+
+/**
+ * Funcion que me retorna un objeto con el primer y ultimo dia de una semana laboral
+ * @param year
+ * @param weekNumber
+ * @param startHour
+ * @returns {{firstWeekDay: Date, lastWeekDay: Date}}
+ */
+export const datesRangesString = (year, weekNumber, startHour) => {
+    // obtenemos el primer dia del año
+    let primerdia = new Date(year, 0, 1);
+
+    // obtenemos la corrección necesaria
+    let correccion = 6 - primerdia.getDay();
+
+    // añadimos validación a la semana
+    try {
+        // validación para la semana
+        if (weekNumber * 7 + correccion > 365) {
+            throw 'El numero de semana ingresado es incorrecto'
+        } else {
+            // obtenemos el lunes
+            let firstWeekDay = new Date(year, 0, (weekNumber - 1) * 7 + 3 + correccion);
+            let lastWeekDay = new Date(year, 0, (weekNumber - 1) * 7 + 8 + correccion)
+            firstWeekDay.setHours(startHour);
+            return {firstWeekDay: firstWeekDay, lastWeekDay: lastWeekDay};
+        }
+    } catch (e) {
+        console.log(e);
+    }
+};
+
 /**
  * Funcion que va a recibir el primer dia de la semana, y la cantidad de dias que quiere representar y retorna una lista
  * @param firstWeekDay
@@ -44,14 +76,13 @@ export const WeekRangeStringLabels = (firstWeekDay, daysToRender) => {
         auxiliaryDate.setDate(firstDay + i);
         const dateString = auxiliaryDate.toLocaleString('en-us', {
             weekday: 'short',
-            day: 'numeric'
+            day: 'numeric',
         })
-        let date = dateString.split(' ')[0];
-        let dayOfWeek = dateString.split(' ')[1];
         daysLabels.push(
             {
-                date: date,
-                dayOfWeek: dayOfWeek
+                date: dateString.split(' ')[0],
+                weekday: dateString.split(' ')[1],
+                completeDate: auxiliaryDate.toLocaleString().split(' ')[0]
             }
         )
     }
@@ -111,13 +142,13 @@ export const MatrizNxN = (columns, rows) => {
  * @param JSONDate
  * @returns {{column: number, row: number}}
  */
-export function PositionInArray(firstDayofWeek, JSONDate) {
+export function PositionInArray(firstDayofWeek, UTCDate) {
     let column;
-    let row = new Date(JSONDate).getUTCDate() - firstDayofWeek.getDate();
-    if (new Date(JSONDate).getUTCMinutes() !== 30) {
-        column = (new Date(JSONDate).getUTCHours() - firstDayofWeek.getHours()) * 2;
+    let row = UTCDate.getDate() - firstDayofWeek.getDate();
+    if (UTCDate.getMinutes() !== 30) {
+        column = (UTCDate.getHours() - firstDayofWeek.getHours()) * 2;
     } else {
-        column = (new Date(JSONDate).getUTCHours() - firstDayofWeek.getHours()) * 2 + 1;
+        column = (UTCDate.getHours() - firstDayofWeek.getHours()) * 2 + 1;
     }
     return {column: column, row: row};
 }
@@ -132,30 +163,31 @@ export function PositionInArray(firstDayofWeek, JSONDate) {
 export const CompleteAppointmentsInArray = (firstDayOfWeek, array, data) => {
     data.map((day) => {
         const JSONDate = new Date(day.appointmentDate);
-        const UTCDate = new Date(JSONDate.getUTCHours(), JSONDate.getUTCMonth(), JSONDate.getUTCDate(),
+        const UTCDate = new Date(JSONDate.getUTCFullYear(), JSONDate.getUTCMonth(), JSONDate.getUTCDate(),
             JSONDate.getUTCHours(), JSONDate.getUTCMinutes(), JSONDate.getUTCSeconds());
 
-        const position = PositionInArray(firstDayOfWeek, day.appointmentDate);
-        if (Array.isArray(array[position.column])) {
-            array[position.column][position.row] = {
-                id_appointment: day.id_appointment,
-                appointmentDate: new Date(UTCDate),
-                id_professional: day.id_professional,
-                id_patient: day.id_patient,
-                details: day.details,
-                patientsName: day.patientsName,
-                professionalsName: day.professionalsName
-            };
+        const position = PositionInArray(firstDayOfWeek, UTCDate);
+        const auxDay = new Date(array[position.column][position.row].appointmentDate)
+        if (auxDay.getDate() === UTCDate.getDate() &&
+            auxDay.getMonth() === UTCDate.getMonth() &&
+            auxDay.getHours() === UTCDate.getHours() &&
+            auxDay.getMinutes() === UTCDate.getMinutes() &&
+            auxDay.getSeconds() === UTCDate.getSeconds()) {
+            array[position.column][position.row].id_appointment = day.id_appointment;
+            array[position.column][position.row].appointmentDate = new Date(UTCDate);
+            array[position.column][position.row].id_professional = day.id_professional;
+            array[position.column][position.row].id_patient = day.id_patient;
+            array[position.column][position.row].details = day.details;
+            array[position.column][position.row].patientsName = day.patientsName;
+            array[position.column][position.row].professionalsName = day.professionalsName;
         } else {
-            array[position.column] = [{
-                id_appointment: day.id_appointment,
-                appointmentDate: new Date(UTCDate),
-                id_professional: day.id_professional,
-                id_patient: day.id_patient,
-                details: day.details,
-                patientsName: day.patientsName,
-                professionalsName: day.professionalsName
-            }];
+            array[position.column][position.row].id_appointment = '';
+            array[position.column][position.row].appointmentDate = new Date(UTCDate);
+            array[position.column][position.row].id_professional = '';
+            array[position.column][position.row].id_patient = '';
+            array[position.column][position.row].details = '';
+            array[position.column][position.row].patientsName = '';
+            array[position.column][position.row].professionalsName = '';
         }
     })
 }
@@ -168,7 +200,8 @@ export const CompleteAppointmentsInArray = (firstDayOfWeek, array, data) => {
  * @param initDataStructureValues
  * @constructor
  */
-export const InitMatrizValues = (matriz, firstWeekDay, initDataStructureValues) => {
+export const InitMatrizValues = (firstWeekDay, initDataStructureValues, data) => {
+    const matriz = MatrizNxN(24, 6);
     let auxDataStructure = JSON.parse(JSON.stringify(initDataStructureValues));
     auxDataStructure.appointmentDate = new Date(firstWeekDay);
 
@@ -182,5 +215,11 @@ export const InitMatrizValues = (matriz, firstWeekDay, initDataStructureValues) 
         IncrementMinutes(auxDataStructure.appointmentDate, 30);
         auxDataStructure.appointmentDate.setDate(firstWeekDay.getUTCDate());
     }
+
+    if (data.length > 0) {
+        CompleteAppointmentsInArray(firstWeekDay, matriz, data);
+    }
+
+    return matriz;
 }
 
