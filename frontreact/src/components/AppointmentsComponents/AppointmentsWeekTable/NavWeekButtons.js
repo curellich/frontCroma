@@ -11,6 +11,7 @@ const style = {
     bottom: 10,
     left: 'auto',
     position: 'fixed',
+
 };
 
 const NavWeekButtons = ({monthDisplay,onNext,onBack}) => {

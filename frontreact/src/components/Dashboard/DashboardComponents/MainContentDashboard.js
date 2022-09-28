@@ -48,7 +48,6 @@ const MainContentDashboard = (props) => {
                 <Route exact path="/Patients" element={<Patients/>}> Pacientes</Route>
             </Routes>
         </Main>
-
     );
 };
 

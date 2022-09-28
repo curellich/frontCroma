@@ -30,7 +30,8 @@ const style = {
 }
 
 const Appointments = () => {
-    const [weekNumber, setWeekNumber] = useState(DateTime.now().weekNumber);
+    // const [weekNumber, setWeekNumber] = useState(DateTime.now().weekNumber);
+    const [weekNumber, setWeekNumber] = useState(12);
 
     return (
         <Stack direction="column" spacing={0}>

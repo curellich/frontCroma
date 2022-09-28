@@ -3,7 +3,7 @@ import {Table, TableBody, TableCell, TableContainer, TableRow} from "@mui/materi
 import {FirstWeekDay, InitMatrizValues} from "../../helpers/AppointmentsHelpers/AppointmentsHelpers";
 import PatientesButtonCell from "./PatientesButtonCell";
 
-
+// const URI = "http://localhost:8000//";
 const emptyDataStructure = {
     id_appointment: '',
     appointmentDate: '',
@@ -105,6 +105,7 @@ const externalData = [
         "professionalsName": 'Euge'
     }
 ]
+
 const AppointmentBody = (weekNumber) => {
     const sxTableCell = sx.tableCell;
     const [data, setData] = useState(externalData);
@@ -115,6 +116,8 @@ const AppointmentBody = (weekNumber) => {
     useEffect(() => {
         setAppointmentsArray(InitMatrizValues(FirstWeekDay(new Date().getFullYear(), weekNumber.weekNumber, 8), emptyDataStructure, externalData));
     }, [weekNumber.weekNumber]);
+
+
 
 
     return (
